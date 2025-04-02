@@ -9,10 +9,23 @@ const ENotImplemented: u64 = 0;
 
 #[test]
 fun test_template() {
-    // pass
+    use sui::test_scenario;
+    use std::debug;
+    use template::template::{init, make_game_challenge, next, PlayerCap, Game};
+
+    let first_player: address = @0x0001;
+    let second_player: address = @0x0002;
+
+    let mut scenario = test_scenario::begin(@0xAAAA);
+    {
+        init(scenario.ctx());
+    };
+
+    scenario.next_tx(second_player);
+    {
+        make_game_challenge(first_player, scenario.ctx())
+    };
+
+    scenario.end();
 }
 
-#[test, expected_failure(abort_code = ::template::template_tests::ENotImplemented)]
-fun test_template_fail() {
-    abort ENotImplemented
-}
