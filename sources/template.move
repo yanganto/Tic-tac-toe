@@ -1,14 +1,10 @@
 /// Module: template
 module template::template;
 
-// === Imports ===
-
 // === Errors ===
 const ENotYourTurn: u64 = 1;
 const EInvalidPos: u64 = 2;
 const EAlreadySettleDown: u64 = 3;
-
-// === Constants ===
 
 // === Structs ===
 public struct Game has key {
@@ -36,14 +32,13 @@ public struct PlayerCap has key, store {
     id: UID,
 }
 
-// === Method Aliases ===
-
 // === Public-Mutative Functions ===
 fun init(_ctx: &TxContext) { }
 
 // === Public-View Functions ===
-
-// === Admin Functions ===
+public fun complete(self: &Game): bool {
+    self.winner.is_some()
+}
 
 // === Public-Package Functions ===
 public entry fun make_game_challenge(
@@ -113,6 +108,7 @@ public entry fun next(game: &mut Game, player: &PlayerCap, pos: u8) {
     game.settle_down(pos);
 }
 
+// === Private Functions ===
 fun settle_down(self: &mut Game, pos: u8) {
     if (pos == 1) {
         if (self.pos_1 == self.pos_2 && self.pos_1 == self.pos_3) {
@@ -186,9 +182,6 @@ fun settle_down(self: &mut Game, pos: u8) {
         self.winner = option::none<ID>();
     }
 }
-
-
-// === Private Functions ===
 
 // === Test Functions ===
 // The setup function can use in the test packages, it is current practice
